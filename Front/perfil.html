@@ -72,7 +72,7 @@
 			</li>
 
 			<li>
-				<a href="" class="opcion">
+				<a onclick="logout()" class="opcion">
 					<img src="img/exit.png">
 					<p>Cerrar sesión</p>
 				</a>
@@ -150,7 +150,9 @@
 			const dataDias = await obtenerFecha(URLDias);
 			const fechaUnidoNoFormato = dataDias.success.user.date_joined.split('T');
 			const fechaUnido = new Date(fechaUnidoNoFormato[0]);
-			const diasDiferentes = fechaHoy.getDate() - fechaUnido.getDate();
+			// const diasDiferentes = fechaHoy.getDate() - fechaUnido.getDate();
+			const diasDiferentes = Math.abs(fechaHoy.getTime() - fechaUnido.getTime());
+			const diasActivo = Math.ceil(diasDiferentes / (1000 * 60 * 60 * 24)); 
 
 			function crearTemplate(HTMLString){
 				const html = document.implementation.createHTMLDocument();
@@ -195,8 +197,8 @@
 								<p>Publicaciones</p>
 							</div>
 							<div class="col-4 element">
-								<label>${diasDiferentes - 1}</label>
-								<p>Días activ@</p>
+								<label>${diasActivo}</label>
+								<p>Días activo</p>
 							</div>
 							<div class="col-4 element">
 								<label>${dataCanCom.success.totalComentarios}</label>
@@ -501,5 +503,18 @@
 				})
 			}
 		})()
+
+		function logout(){
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			fetch(`http://127.0.0.1:8000/logout/${usuarioJSON.user.username}/`)
+			.then((response) => {
+				sessionStorage.removeItem('usuario');
+				window.location.href = 'login.html'
+			})
+			.catch((response) =>{
+				console.log(response);
+			})
+		}
 	</script>
 </html>

@@ -1,14 +1,12 @@
 # Django
 from django.urls import path
 
-from apps.Evento.views import nuevo_evento,publicacionEvento,comentarEvento,eventos
+# Funciones
+from apps.Evento.views import  eventos
+from apps.Evento.views import  evento_especifico
 
-app_name='Evento'
+app_name='eventos'
 urlpatterns = [
-	path('', eventos, name='adopciones'),
-    path('comentarios/', publicacionEvento, name='publicacionA'),
-    path('nuevo/', nuevo_evento, name='nuevo_evento'),
-    path('comentar/', comentarEvento, name='comentarA'),
-
+	path('',eventos,name='eventos'),
+	path('evento/<id>/',evento_especifico,name='evento_especifico'),
 ]
-	

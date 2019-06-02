@@ -235,3 +235,13 @@ def publicaciones_usuario(request, username):
 			}
 		}
 		return JSONResponse(data, status=200)
+
+@csrf_exempt
+def logout_view(request, username):
+	user = User.objects.get(username=username)
+	logout(request)
+	data = {
+		'success': True
+	}
+	return JSONResponse(data, status=200)
+

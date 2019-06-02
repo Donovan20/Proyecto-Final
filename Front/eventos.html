@@ -71,7 +71,7 @@
 			</li>
 
 			<li>
-				<a href="" class="opcion">
+				<a onclick="logout()" class="opcion">
 					<img src="img/exit.png">
 					<p>Cerrar sesión</p>
 				</a>
@@ -85,47 +85,8 @@
 			<div class="col-12 col-lg-8 col-md-8">
 				<div class="feed">
 
-					<a href="#">
-						<div class="bloque">
-							<div class="contImg">
-								<img src="img/calendar.png">
-							</div>
-							<div class="info">
-								<p>Perrotón 2019</p>
-								<small>24 de marzo de 2019</small>
-								<a href="" class="link">Ver más</a>
-							</div>
-						</div>
-					</a>
-
-
-					<a href="#">
-						<div class="bloque">
-							<div class="contImg">
-								<img src="img/calendar.png">
-							</div>
-							<div class="info">
-								<p>Perrotón 2019</p>
-								<small>24 de marzo de 2019</small>
-								<a href="" class="link">Ver más</a>
-							</div>
-						</div>
-					</a>
-
-
-					<a href="#">
-						<div class="bloque">
-							<div class="contImg">
-								<img src="img/calendar.png">
-							</div>
-							<div class="info">
-								<p>Perrotón 2019</p>
-								<small>24 de marzo de 2019</small>
-								<a href="" class="link">Ver más</a>
-							</div>
-						</div>
-					</a>
-					
+					<div id="bloqueEventos">
+					</div>
 
 				</div>				
 			</div>
@@ -134,4 +95,79 @@
 
 </body>
 	<script type="text/javascript" src="js/funcionesEstilos.js"></script>
+	<script type="text/javascript">
+		(async function cargar(){
+			localStorage.removeItem('id');
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			const URL = `http://127.0.0.1:8000/eventos/`;
+			const contenedor = document.getElementById('bloqueEventos');
+
+			async function obtenerData(url){
+				const response = await fetch(url)
+				const data = await response.json()
+				return data;
+			}
+
+			const data = await obtenerData(URL);
+
+			function bloqueEvento(evento){
+				const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+				fecha = evento.fecha.split('-');
+				return(
+					`
+					<div class="bloque">
+						<div class="contImg">
+							<img src="http://127.0.0.1:8000${evento.foto}">
+						</div>
+						<div class="info">
+							<p>${evento.nombre}</p>
+							<small>${fecha[2]} de ${MESES[fecha[1]-1]} de ${fecha[0]}</small>
+							<a id="etiquetasA" href="evento.html" class="link">Ver más</a>
+							<input type="hidden" value="${evento.id}">
+						</div>
+					</div>
+					`
+				)
+			}
+
+			function crearTemplate(HTMLString){
+				const html = document.implementation.createHTMLDocument();
+				html.body.innerHTML = HTMLString;
+				return html.body.children[0]
+			}
+
+			function renderEventos(lista){
+				lista.forEach((evento) => {
+					const htmlEvento = bloqueEvento(evento);
+					const htmlEventoElemento = crearTemplate(htmlEvento);
+					contenedor.append(htmlEventoElemento);
+				})
+			}
+
+			renderEventos(data.eventos);
+
+			const as = document.querySelectorAll('#etiquetasA');
+			for(etiqueta of as){
+			etiqueta.addEventListener('click', async (e) => {
+				const id = e.target.nextElementSibling.value;
+				// alert(id);
+				localStorage.setItem('id', id);
+			})
+			}
+		})()
+
+		function logout(){
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			fetch(`http://127.0.0.1:8000/logout/${usuarioJSON.user.username}/`)
+			.then((response) => {
+				sessionStorage.removeItem('usuario');
+				window.location.href = 'login.html'
+			})
+			.catch((response) =>{
+				console.log(response);
+			})
+		}
+	</script>
 </html>

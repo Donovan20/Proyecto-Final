@@ -128,6 +128,7 @@ def nuevo_extravio(request, username):
             return JSONResponse(data, status=200)
         return JSONResponse(serializerExtravio.errors, status=400)
 
+@csrf_exempt
 def comentarExtravio(request):
     if request.method == 'POST':
         comen = request.POST['comentario']

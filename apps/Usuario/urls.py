@@ -8,6 +8,7 @@ from apps.Usuario.views import cantidad_publicaciones
 from apps.Usuario.views import cantidad_comentarios
 from apps.Usuario.views import dias_activo
 from apps.Usuario.views import publicaciones_usuario
+from apps.Usuario.views import logout_view
 
 app_name='usuario'
 urlpatterns = [
@@ -18,5 +19,6 @@ urlpatterns = [
 	path('perfil/cantidad_comentarios/<username>/', cantidad_comentarios, name='cantidad_comentarios'),
 	path('perfil/dias_activo/<username>/', dias_activo, name='dias_activo'),
 	path('perfil/publicaciones_usuario/<username>/', publicaciones_usuario, name='publicaciones_usuario'),
+	path('logout/<username>/', logout_view, name='logout'),
 ]
 	

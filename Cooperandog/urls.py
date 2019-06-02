@@ -24,4 +24,5 @@ urlpatterns = [
     path('adopciones/', include('apps.Adopciones.urls')),
     path('extravios/', include('apps.Extravio.urls')),
     path('rescates/', include('apps.Rescate.urls')),
+    path('eventos/', include('apps.Evento.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

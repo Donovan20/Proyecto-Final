@@ -71,7 +71,7 @@
 			</li>
 
 			<li>
-				<a href="" class="opcion">
+				<a onclick="logout()" class="opcion">
 					<img src="img/exit.png">
 					<p>Cerrar sesión</p>
 				</a>
@@ -107,6 +107,7 @@
 			const URLExtravios = `http://127.0.0.1:8000/extravios/`;
 			const URLComExtravios = `http://127.0.0.1:8000/extravios/comentarios/`;
 			const contenedor = document.getElementById('publicacion');
+			// contenedor.innerHTML = '';
 
 			async function obtenerDataRescates(url){
 				const response = await fetch(url)
@@ -443,5 +444,18 @@
 				})
 			}
 		})()
+
+		function logout(){
+			const usuario = sessionStorage.getItem('usuario');
+			const usuarioJSON = JSON.parse(usuario);
+			fetch(`http://127.0.0.1:8000/logout/${usuarioJSON.user.username}/`)
+			.then((response) => {
+				sessionStorage.removeItem('usuario');
+				window.location.href = 'login.html'
+			})
+			.catch((response) =>{
+				console.log(response);
+			})
+		}
 	</script>
 </html>
